@@ -1,50 +1,50 @@
 package io.github.violaceusflame.lab1.queue;
 
-public class LinkedListQueue<T> implements Queue<T> {
-    private static class Node<T> {
-        private T data;
-        private Node<T> next;
+public class LinkedListQueue<ElType> implements Queue<ElType> {
+    private static class Node<ElType> {
+        private ElType data;
+        private Node<ElType> next;
 
-        public Node(T data) {
+        public Node(ElType data) {
             this.data = data;
         }
 
-        public T getData() {
+        public ElType getData() {
             return data;
         }
 
-        public Node<T> getNext() {
+        public Node<ElType> getNext() {
             return next;
         }
 
-        public void setData(T data) {
+        public void setData(ElType data) {
             this.data = data;
         }
 
-        public void setNext(Node<T> next) {
+        public void setNext(Node<ElType> next) {
             this.next = next;
         }
     }
 
-    private Node<T> head;
-    private Node<T> tail;
+    private Node<ElType> head;
+    private Node<ElType> tail;
 
     public LinkedListQueue() {
         this.head = this.tail = new Node<>(null);
     }
 
     @Override
-    public boolean enqueue(T item) {
-        Node<T> newNode = new Node<>(item);
+    public boolean enqueue(ElType item) {
+        Node<ElType> newNode = new Node<>(item);
         tail.setNext(newNode);
         tail = newNode;
         return true;
     }
 
     @Override
-    public T dequeue() {
+    public ElType dequeue() {
         // TODO: тут косяк
-        Node<T> node = head.getNext();
+        Node<ElType> node = head.getNext();
         head.setNext(node.getNext());
         node.setNext(null);
         return node.getData();
@@ -61,14 +61,14 @@ public class LinkedListQueue<T> implements Queue<T> {
     }
 
     @Override
-    public T front() {
+    public ElType front() {
         return head.getNext().getData();
     }
 
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        Node<T> currentNode = head.getNext();
+        Node<ElType> currentNode = head.getNext();
         while (currentNode != null) {
             result.append(currentNode.getData());
             currentNode = currentNode.getNext();
