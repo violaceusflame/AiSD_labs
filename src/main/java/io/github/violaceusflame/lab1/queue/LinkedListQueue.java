@@ -43,11 +43,19 @@ public class LinkedListQueue<ElType> implements Queue<ElType> {
 
     @Override
     public ElType dequeue() {
-        // TODO: тут косяк
+        if (isEmpty()) {
+            return null;
+        }
+
         Node<ElType> node = head.getNext();
+        ElType data = node.getData();
         head.setNext(node.getNext());
-        node.setNext(null);
-        return node.getData();
+
+        if (head.getNext() == null) {
+            tail = head;
+        }
+
+        return data;
     }
 
     @Override
@@ -62,18 +70,26 @@ public class LinkedListQueue<ElType> implements Queue<ElType> {
 
     @Override
     public ElType front() {
+        if (isEmpty()) {
+            return null;
+        }
+
+//        return (head.getNext() == null) ? null : head.getNext().getData();
         return head.getNext().getData();
     }
 
     @Override
     public String toString() {
+        if (isEmpty()) {
+            return "";
+        }
+
         StringBuilder result = new StringBuilder();
         Node<ElType> currentNode = head.getNext();
         while (currentNode != null) {
-            result.append(currentNode.getData());
+            result.append(currentNode.getData()).append("\n");
             currentNode = currentNode.getNext();
-            result.append(currentNode != null ? ", " : "");
         }
-        return "[%s]".formatted(result.toString());
+        return result.toString();
     }
 }
