@@ -34,7 +34,7 @@ public class LinkedListQueue<ElType> implements Queue<ElType> {
     }
 
     @Override
-    public boolean enqueue(ElType item) {
+    public synchronized boolean enqueue(ElType item) {
         Node<ElType> newNode = new Node<>(item);
         tail.setNext(newNode);
         tail = newNode;
@@ -42,7 +42,7 @@ public class LinkedListQueue<ElType> implements Queue<ElType> {
     }
 
     @Override
-    public ElType dequeue() {
+    public synchronized ElType dequeue() {
         if (isEmpty()) {
             return null;
         }
@@ -69,12 +69,11 @@ public class LinkedListQueue<ElType> implements Queue<ElType> {
     }
 
     @Override
-    public ElType front() {
+    public synchronized ElType front() {
         if (isEmpty()) {
             return null;
         }
 
-//        return (head.getNext() == null) ? null : head.getNext().getData();
         return head.getNext().getData();
     }
 

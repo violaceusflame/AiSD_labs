@@ -24,8 +24,6 @@ public class ArrayQueue<ElType> implements Queue<ElType> {
 
     @Override
     public boolean isFull() {
-        // TODO: тут хуй знает
-        // TODO: вроде переделал, но надо проверить
         return (tailIndex + 1) % capacity == headIndex;
     }
 
