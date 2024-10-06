@@ -12,7 +12,7 @@ public class ArrayQueue<ElType> implements Queue<ElType> {
     }
 
     @Override
-    public boolean enqueue(ElType elType) {
+    public synchronized boolean enqueue(ElType elType) {
         if (isFull()) {
             return false;
         }
@@ -28,14 +28,20 @@ public class ArrayQueue<ElType> implements Queue<ElType> {
     }
 
     @Override
+    public void reset() {
+        while (!isEmpty()) {
+            dequeue();
+        }
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public ElType dequeue() {
+    public synchronized ElType dequeue() {
         if (isEmpty()) {
             return null;
         }
 
         ElType result = (ElType) array[headIndex];
-//        array[headIndex] = null;
         headIndex = (headIndex + 1) % capacity;
         return result;
     }
@@ -47,7 +53,7 @@ public class ArrayQueue<ElType> implements Queue<ElType> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public ElType front() {
+    public synchronized ElType front() {
         if (isEmpty()) {
             return null;
         }

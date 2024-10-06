@@ -4,14 +4,13 @@ import io.github.violaceusflame.lab1.observer.Observable;
 import io.github.violaceusflame.lab1.observer.Observer;
 import io.github.violaceusflame.lab1.queue.Queue;
 import io.github.violaceusflame.lab1.util.Logger;
-import io.github.violaceusflame.lab1.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailConveyor implements Observable, Observer {
+public class DetailConveyor implements Observable {
     private enum LogMessageTemplate {
-        ADDED("Добавлена деталь с кодом '%s'"),
+        ADDED("[Время: %d] Добавлена деталь с кодом '%s'"),
         PROCESSED("[Время: %d] Обработана деталь с кодом '%s'"),
         CANCELLED("[Время: %d] Выполнен отказ от установки детали с кодом '%s'");
 
@@ -24,18 +23,17 @@ public class DetailConveyor implements Observable, Observer {
 
     private static final String FULL_QUEUE = "Очередь заполнена";
     private static final String EMPTY_QUEUE = "Очередь пуста";
-    private static final int TIME_TO_WAIT_NEW_QUEUE_ITEMS = 500;
+    private static final String RESET_QUEUE = "Очередь очищена";
+    private static final int UNSPECIFIED_DEADLINE = 0;
 
     private final Queue<Detail> detailQueue;
-    private final Timer timer;
+    private final Timer timer = new Timer();
     private final Logger logger = new Logger();
     private final List<Observer> observers = new ArrayList<>();
-    private boolean isRunning;
+    private int currentProcessDetailDeadline = UNSPECIFIED_DEADLINE;
 
     public DetailConveyor(Queue<Detail> detailQueue) {
         this.detailQueue = detailQueue;
-        this.timer = new Timer();
-        this.timer.addObserver(this);
     }
 
     public void add(String code, int time) {
@@ -46,7 +44,7 @@ public class DetailConveyor implements Observable, Observer {
 
         Detail detail = new Detail(code, time);
         detailQueue.enqueue(detail);
-        String logMessage = LogMessageTemplate.ADDED.text.formatted(detail.code());
+        String logMessage = LogMessageTemplate.ADDED.text.formatted(timer.getCurrentTime(), detail.code());
         logAndNotifyObservers(logMessage);
     }
 
@@ -57,51 +55,49 @@ public class DetailConveyor implements Observable, Observer {
         }
 
         Detail dequeued = detailQueue.dequeue();
-        // TODO надо ли?
-//        notifyObservers();
+        String logMessage = LogMessageTemplate.CANCELLED.text.formatted(timer.getCurrentTime(), dequeued.code());
+        resetProcessDetailDeadline();
+        logAndNotifyObservers(logMessage);
         return dequeued;
     }
 
-    public void start() {
-        isRunning = true;
-        startTimer();
-
-        while (isRunning) {
-            while (!detailQueue.isEmpty()) {
-                processDetail();
-            }
-            Utils.sleep(TIME_TO_WAIT_NEW_QUEUE_ITEMS);
-        }
+    public void reset() {
+        detailQueue.reset();
+        resetProcessDetailDeadline();
+        logAndNotifyObservers(RESET_QUEUE);
     }
 
-    private void startTimer() {
-        Thread timerThread = new Thread(timer::start, "timer thread");
-        timerThread.start();
+    private void resetProcessDetailDeadline() {
+        currentProcessDetailDeadline = UNSPECIFIED_DEADLINE;
+    }
+
+    public void start() {
+        notifyObservers();
     }
 
     public void nextTurn() {
         timer.increment();
-    }
-
-    public void stop() {
-        timer.stop();
-        isRunning = false;
+        processDetail();
+        notifyObservers();
     }
 
     // TODO: отрефакторить метод по Фаулеру
-    public void processDetail() {
-        Detail detail = detailQueue.front();
-        int timeToEnd = timer.getCurrentTime() + detail.time();
-        while (timer.getCurrentTime() < timeToEnd) {
-            if (detailQueue.front() != detail) {
-                String logMessage = LogMessageTemplate.CANCELLED.text.formatted(timer.getCurrentTime(), detail.code());
-                logAndNotifyObservers(logMessage);
-                return;
-            }
-            Thread.yield();
+    public synchronized void processDetail() {
+        if (detailQueue.isEmpty()) {
+            return;
         }
-        String logMessage = LogMessageTemplate.PROCESSED.text.formatted(timeToEnd, detailQueue.dequeue().code());
-        logAndNotifyObservers(logMessage);
+
+        if (currentProcessDetailDeadline == UNSPECIFIED_DEADLINE) {
+            Detail currentDetail = detailQueue.front();
+            // FIXME костыль
+            currentProcessDetailDeadline = timer.getCurrentTime() + currentDetail.time() - 1;
+        }
+        if (timer.getCurrentTime() == currentProcessDetailDeadline) {
+            Detail dequeued = detailQueue.dequeue();
+            String logMessage = LogMessageTemplate.PROCESSED.text.formatted(timer.getCurrentTime(), dequeued.code());
+            resetProcessDetailDeadline();
+            logAndNotifyObservers(logMessage);
+        }
     }
 
     private void logAndNotifyObservers(String logMessage) {
@@ -131,10 +127,5 @@ public class DetailConveyor implements Observable, Observer {
         for (Observer observer : observers) {
             observer.onUpdate();
         }
-    }
-
-    @Override
-    public void onUpdate() {
-        notifyObservers();
     }
 }

@@ -54,6 +54,7 @@ public class MainArrayQueueConfiguration {
         });
         menuView.addAction("Удалить из очереди", detailConveyorViewModel::remove);
         menuView.addAction("Перейти к следующему моменту", detailConveyorViewModel::nextTurn);
+        menuView.addAction("Сброс очереди", detailConveyorViewModel::reset);
 
         renderer.addView(menuView);
 

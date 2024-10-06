@@ -18,7 +18,6 @@ import io.github.violaceusflame.lab1.viewmodel.DetailConveyorViewModel;
 
 public class MainLinkedListQueueConfiguration {
     public static void main(String[] args) {
-//        // FIXME: NPE на последней итерации
         Queue<Detail> detailQueue = new LinkedListQueue<>();
         detailQueue.enqueue(new Detail("ABCD", 5));
         detailQueue.enqueue(new Detail("QWER", 3));
@@ -54,6 +53,8 @@ public class MainLinkedListQueueConfiguration {
             renderer.render();
         });
         menuView.addAction("Удалить из очереди", detailConveyorViewModel::remove);
+        menuView.addAction("Перейти к следующему моменту", detailConveyorViewModel::nextTurn);
+        menuView.addAction("Сброс очереди", detailConveyorViewModel::reset);
 
         renderer.addView(menuView);
 

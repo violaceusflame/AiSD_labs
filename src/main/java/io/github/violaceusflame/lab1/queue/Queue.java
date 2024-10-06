@@ -5,5 +5,6 @@ public interface Queue<ElType> {
     ElType dequeue();
     boolean isEmpty();
     boolean isFull();
+    void reset();
     ElType front();
 }

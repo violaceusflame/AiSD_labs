@@ -27,12 +27,15 @@ public class DetailConveyorViewModel implements Observer, Observable {
         detailConveyor.remove();
     }
 
+    public void reset() {
+        detailConveyor.reset();
+    }
+
     public void nextTurn() {
         detailConveyor.nextTurn();
     }
 
     public void exit() {
-        detailConveyor.stop();
         System.exit(0);
     }
 

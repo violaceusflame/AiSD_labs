@@ -69,6 +69,17 @@ public class LinkedListQueue<ElType> implements Queue<ElType> {
     }
 
     @Override
+    public void reset() {
+        if (isEmpty()) {
+            return;
+        }
+
+        while (!isEmpty()) {
+            dequeue();
+        }
+    }
+
+    @Override
     public synchronized ElType front() {
         if (isEmpty()) {
             return null;

@@ -32,14 +32,6 @@ public class MenuView implements View {
     private final List<Command> menuCommands = new ArrayList<>();
     private int commandIdSequence = START_COMMAND_ID;
 
-    public MenuView() {
-        new Thread(() -> {
-            while (true) {
-                this.getInput();
-            }
-        }, "input thread").start();
-    }
-
     public String getInput() {
         while (true) {
             char ch = InputReader.readInput().charAt(0);
@@ -73,8 +65,7 @@ public class MenuView implements View {
     @Override
     public void show() {
         System.out.print(getPresentation());
-//        getInput();
-//        new Thread(this::getInput, "input thread").start();
+        getInput();
     }
 
     public String getPresentation() {
