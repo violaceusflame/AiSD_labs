@@ -12,7 +12,7 @@ public class ArrayQueue<ElType> implements Queue<ElType> {
     }
 
     @Override
-    public synchronized boolean enqueue(ElType elType) {
+    public boolean enqueue(ElType elType) {
         if (isFull()) {
             return false;
         }
@@ -36,7 +36,7 @@ public class ArrayQueue<ElType> implements Queue<ElType> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public synchronized ElType dequeue() {
+    public ElType dequeue() {
         if (isEmpty()) {
             return null;
         }
@@ -53,7 +53,7 @@ public class ArrayQueue<ElType> implements Queue<ElType> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public synchronized ElType front() {
+    public ElType front() {
         if (isEmpty()) {
             return null;
         }
