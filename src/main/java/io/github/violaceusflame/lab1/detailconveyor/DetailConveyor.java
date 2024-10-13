@@ -81,8 +81,7 @@ public class DetailConveyor implements Observable {
         notifyObservers();
     }
 
-    // TODO: отрефакторить метод по Фаулеру
-    public synchronized void processDetail() {
+    public void processDetail() {
         if (detailQueue.isEmpty()) {
             return;
         }

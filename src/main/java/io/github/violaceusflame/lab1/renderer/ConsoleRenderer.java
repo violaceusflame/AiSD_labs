@@ -19,16 +19,13 @@ public class ConsoleRenderer implements Renderer {
     }
 
     private final List<View> views = new ArrayList<>();
-    private boolean isPaused = false;
 
     @Override
-    public synchronized void render() {
-        if (!isPaused) {
-            clearConsole();
-            hideCursor();
-            renderViews();
-            showCursor();
-        }
+    public void render() {
+        clearConsole();
+        hideCursor();
+        renderViews();
+        showCursor();
     }
 
     private void renderViews() {
@@ -40,16 +37,6 @@ public class ConsoleRenderer implements Renderer {
     @Override
     public void addView(View view) {
         views.add(view);
-    }
-
-    @Override
-    public void pauseRender() {
-        isPaused = true;
-    }
-
-    @Override
-    public void resumeRender() {
-        isPaused = false;
     }
 
     private void showCursor() {

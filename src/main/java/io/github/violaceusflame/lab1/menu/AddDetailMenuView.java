@@ -11,7 +11,6 @@ public class AddDetailMenuView implements View {
     private static final String HEADER = "[РЕЖИМ ДОБАВЛЕНИЯ ДЕТАЛИ]";
     private static final String CODE_TYPE_MESSAGE = "Введите код детали: ";
     private static final String TIME_TYPE_MESSAGE = "Введите время обработки детали: ";
-    private static final Scanner scanner = new Scanner(System.in);
 
     private final Renderer renderer;
     private BiConsumer<String, Integer> action;
@@ -21,7 +20,7 @@ public class AddDetailMenuView implements View {
     }
 
     @Override
-    public synchronized void show() {
+    public void show() {
         System.out.println(HEADER);
         System.out.println(CODE_TYPE_MESSAGE);
         String code = InputReader.readInput();
@@ -32,9 +31,5 @@ public class AddDetailMenuView implements View {
 
     public void addAction(BiConsumer<String, Integer> action) {
         this.action = action;
-    }
-
-    private synchronized String readInput() {
-        return scanner.nextLine();
     }
 }

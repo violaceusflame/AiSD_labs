@@ -11,7 +11,8 @@ public class QueueStateViewComponent implements ViewComponent {
 
     @Override
     public void show() {
-        System.out.println(TEMPLATE + supplier.get());
+        String onUpdateData = supplier.get();
+        System.out.println(TEMPLATE + onUpdateData);
     }
 
     @Override

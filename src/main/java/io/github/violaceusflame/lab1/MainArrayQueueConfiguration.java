@@ -47,9 +47,7 @@ public class MainArrayQueueConfiguration {
         MenuView menuView = new MenuView();
         menuView.addAction("Выйти", detailConveyorViewModel::exit);
         menuView.addAction("Добавить в очередь", () -> {
-            renderer.pauseRender();
             addDetailMenuView.show();
-            renderer.resumeRender();
             renderer.render();
         });
         menuView.addAction("Удалить из очереди", detailConveyorViewModel::remove);

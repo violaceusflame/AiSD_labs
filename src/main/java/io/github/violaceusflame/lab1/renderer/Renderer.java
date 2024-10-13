@@ -5,6 +5,4 @@ import io.github.violaceusflame.lab1.view.View;
 public interface Renderer {
     void render();
     void addView(View view);
-    void pauseRender();
-    void resumeRender();
 }

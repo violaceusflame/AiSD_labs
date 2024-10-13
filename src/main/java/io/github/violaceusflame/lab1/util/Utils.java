@@ -1,19 +1,12 @@
 package io.github.violaceusflame.lab1.util;
 
-import java.util.Scanner;
-
 public class Utils {
-    private static final Scanner SCANNER = new Scanner(System.in);
-
-    public static void sleep(long millis) {
+    public static boolean isInteger(char ch) {
         try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            Integer.parseInt(String.valueOf(ch));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
-    }
-
-    public synchronized static Scanner getScanner() {
-        return new Scanner(System.in);
     }
 }
