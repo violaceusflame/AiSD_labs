@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Graph<String> graph = new Graph<>();
         GraphInitializer graphInitializer = new GraphInitializer(
-                new FileInputParser("src/main/java/io/github/violaceusflame/lab3/graph_adjacency_list.txt"),
+                new FileInputParser("src/main/java/io/github/violaceusflame/lab3/graph_adjacency_list1.txt"),
                 graph);
         graphInitializer.initialize();
         dialog(graph);
@@ -68,6 +68,23 @@ public class Main {
                     System.out.printf("Вершины %s и %s связаны: %s%n", targetVertex, linkedVertex, linked);
                     break;
                 case "4":
+                    String a = scanner.nextLine();
+                    if (!graph.containsVertex(a)) {
+                        System.out.println("Такой вершины нет в графе");
+                        break;
+                    }
+                    String b = scanner.nextLine();
+                    if (!graph.containsVertex(a)) {
+                        System.out.println("Такой вершины нет в графе");
+                        break;
+                    }
+                    if (graph.isLinked(a, b)) {
+                        System.out.println("Связь между заданными вершинами уже существует");
+                        break;
+                    }
+                    graph.addLinkedVertex(a, b);
+                    break;
+                case "5":
                     isRunning = false;
                     break;
             }
@@ -79,7 +96,8 @@ public class Main {
         System.out.println("1. Добавить вершину со ссылками на другие вершины");
         System.out.println("2. Исключить вершину из графа");
         System.out.println("3. Найти ребро, связывающего заданные вершины");
-        System.out.println("4. Выйти");
+        System.out.println("4. Связать вершины");
+        System.out.println("5. Выйти");
         System.out.print(">>> ");
     }
 }
